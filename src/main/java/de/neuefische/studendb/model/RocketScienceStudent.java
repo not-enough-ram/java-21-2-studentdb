@@ -2,24 +2,12 @@ package de.neuefische.studendb.model;
 
 public class RocketScienceStudent extends Student {
 
-    private String codingSkills;
-
-    public RocketScienceStudent(String name, String id, String specialSkill) {
-        super(name, id, specialSkill);
-        this.codingSkills = specialSkill;
+    public RocketScienceStudent(String name, String id) {
+        super(name, id);
     }
 
     @Override
     public String getSpecialSkill() {
-        return codingSkills;
-    }
-
-    public void setCodingSkills(String codingSkills) {
-        this.codingSkills = codingSkills;
-    }
-
-    public RocketScienceStudent(String name, String id, String codingSkills) {
-        super(name, id);
-        this.codingSkills = codingSkills;
+        return "Can hack every device in line of sight.";
     }
 }
