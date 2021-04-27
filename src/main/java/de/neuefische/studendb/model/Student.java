@@ -6,10 +6,20 @@ public class Student {
 
     private String name;
     private String id;
+    private String specialSkill;
 
-    public Student(String name, String id){
+    public String getSpecialSkill() {
+        return specialSkill;
+    }
+
+    public void setSpecialSkill(String specialSkill) {
+        this.specialSkill = specialSkill;
+    }
+
+    public Student(String name, String id, String specialSkill){
         this.name = name;
         this.id = id;
+        this.specialSkill = specialSkill;
     }
 
     public void setName(String name) {
