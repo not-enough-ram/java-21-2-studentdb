@@ -8,12 +8,11 @@ public class Student {
     private String id;
 
 
-
     public String getSpecialSkill() {
         return "An ordinary student has no special skills.";
     }
 
-    public Student(String name, String id){
+    public Student(String name, String id) {
         this.name = name;
         this.id = id;
     }
