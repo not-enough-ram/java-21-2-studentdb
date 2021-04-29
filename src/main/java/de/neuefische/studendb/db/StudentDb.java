@@ -2,23 +2,69 @@ package de.neuefische.studendb.db;
 
 import de.neuefische.studendb.model.Student;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+
+import static java.util.Set.copyOf;
 
 public class StudentDb {
 
-    private ArrayList<Student> students;
+    private final Map <String, Student> students = new HashMap<>();
 
-    public StudentDb(ArrayList<Student> student) {
-        this.students = student;
+    public StudentDb(Map students) {
+        students.putAll(students);
+    }
+
+    public StudentDb(ArrayList<Student> student){
+        for (Student s : student){
+            this.students.put(s.getId(), s);
+        }
     }
 
     public StudentDb(Student[] student) {
-        this.students = new ArrayList<>();
         for (Student s : student){
-            this.students.add(s);
+            this.students.put(s.getId(), s);
         }
+    }
+
+    public StudentDb(Student student) {
+            this.students.put(student.getId(), student);
+        }
+
+    public StudentDb(){
+
+    }
+
+    public List<Student> list(){
+        return List.copyOf(students.values());
+    }
+
+    @Override
+    public String toString() {
+        return "StudentDb{" +
+                "students=" + students +
+                '}';
+    }
+
+    public Student randomStudent() {
+        List<Student> studentList = new ArrayList<Student>(students.values());
+        int index = (int) Math.floor(Math.random() * studentList.size());
+        return studentList.get(index);
+    }
+
+    public void add(Student student) {
+        students.put(student.getId(), student);
+    }
+
+    public void remove(Student student) {
+        students.remove(student.getId(), student);
+        }
+
+    public Student findById(String id) {
+        return students.get(id);
+    }
+
+    public void removeById(String id){
+        this.remove(findById(id));
     }
 
     @Override
@@ -32,47 +78,5 @@ public class StudentDb {
     @Override
     public int hashCode() {
         return Objects.hash(students);
-    }
-
-    public ArrayList<Student> list() {
-        return students;
-    }
-
-    @Override
-    public String toString(){
-        String result = "";
-        for (int i = 0; i < students.size(); i++) {
-            result += students.get(i) + "\n";
-        }
-        return result;
-    }
-
-    public Student randomStudent() {
-        int index = (int) Math.floor(Math.random() * students.size());
-        return students.get(index);
-    }
-
-    public void add(Student student) {
-        students.add(student);
-    }
-
-    public void remove(Student student) {
-        students.remove(student);
-        }
-
-    public Student findById(String id) {
-        if (id == null) {
-            return null;
-        }
-        for (Student s : students) {
-            if (s.getId().equals(id)) {
-                return s;
-            }
-        }
-        return null;
-    }
-
-    public void removeById(String id){
-        this.remove(findById(id));
     }
 }

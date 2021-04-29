@@ -8,8 +8,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
 
 class StudentDbTest {
 
@@ -93,43 +98,22 @@ class StudentDbTest {
     @DisplayName("list() returns all students in the db")
     public void testList() {
         // Given
-        ArrayList<Student> students = new ArrayList<>();
-               students.add(new Student("Jane", "42"));
-               students.add(new Student("Klaus", "13"));
-               students.add(new Student("Franky", "100"));
+        StudentDb studentsDb = new StudentDb();
+        studentsDb.add(new Student("Jane", "42"));
+        studentsDb.add(new Student("Klaus", "13"));
+        studentsDb.add(new Student("Franky", "100"));
 
-        StudentDb studentDb = new StudentDb(students);
 
-        // When
-        ArrayList<Student> actual = studentDb.list();
-
-        // Then
-        ArrayList<Student> expected = new ArrayList<>();
-                expected.add(new Student("Jane", "42"));
-                expected.add(new Student("Klaus", "13"));
-                expected.add(new Student("Franky", "100"));
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @DisplayName("toString() returns a formatted list of all students")
-    public void testToString() {
-        // Given
-        ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student("Jane", "42"));
-        students.add(new Student("Klaus", "13"));
-        students.add(new Student("Franky", "100"));
-
-        StudentDb studentDb = new StudentDb(students);
 
         // When
-        String actual = studentDb.toString();
+        List actual = studentsDb.list();
 
         // Then
-        String expected = "Student{name='Jane', id='42'}\n"
-                + "Student{name='Klaus', id='13'}\n"
-                + "Student{name='Franky', id='100'}\n";
+        StudentDb expected = new StudentDb();
+        expected.add(new Student("Jane", "42"));
+        expected.add(new Student("Klaus", "13"));
+        expected.add(new Student("Franky", "100"));
+
         assertEquals(expected, actual);
     }
 
@@ -167,18 +151,16 @@ class StudentDbTest {
     @Test
     void findByIdTest() {
         // GIVEN
-        ArrayList students = new ArrayList();
+        StudentDb students = new StudentDb();
         students.add(new Student("Jane", "42"));
         students.add(new Student("Kai", "13"));
         students.add(new Student("Kani", "666"));
-
-        StudentDb studentDb = new StudentDb(students);
 
         Student expected = new Student("Jane", "42");
         String id = "42";
 
         // WHEN
-        Student actual = studentDb.findById(id);
+        Student actual = students.findById(id);
 
         // THEN
         assertEquals(expected, actual);
@@ -188,17 +170,15 @@ class StudentDbTest {
     @Test
     void findByIdNoMatchTest() {
         // GIVEN
-        ArrayList students = new ArrayList();
+        StudentDb students = new StudentDb();
         students.add(new Student("Jane", "42"));
         students.add(new Student("Kai", "13"));
         students.add(new Student("Kani", "666"));
 
-        StudentDb studentDb = new StudentDb(students);
-
         String id = "43";
 
         // WHEN
-        Student actual = studentDb.findById(id);
+        Student actual = students.findById(id);
 
         // THEN
         assertNull(actual);
@@ -208,14 +188,12 @@ class StudentDbTest {
     @Test
     void findByIdNoListTest() {
         // GIVEN
-        ArrayList students = new ArrayList();
-
-        StudentDb studentDb = new StudentDb(students);
+        StudentDb students = new StudentDb();
 
         String id = "43";
 
         // WHEN
-        Student actual = studentDb.findById(id);
+        Student actual = students.findById(id);
 
         // THEN
         assertNull(actual);
@@ -225,24 +203,21 @@ class StudentDbTest {
     @Test
     void removeById() {
         // GIVEN
-        ArrayList students = new ArrayList();
+        StudentDb students = new StudentDb();
         students.add(new Student("Jane", "42"));
         students.add(new Student("Kai", "13"));
         students.add(new Student("Kani", "666"));
 
-        ArrayList studentsExpected = new ArrayList();
+        StudentDb studentsExpected = new StudentDb();
         studentsExpected.add(new Student("Kai", "13"));
         studentsExpected.add(new Student("Kani", "666"));
-
-        StudentDb studentDbExpected = new StudentDb(studentsExpected);
-        StudentDb studentDb = new StudentDb(students);
 
         String id = "42";
 
         // WHEN
-        studentDb.removeById(id);
+        students.removeById(id);
 
         // THEN
-        assertEquals(studentsExpected, studentDb.list());
+        assertThat(students.list(), containsInAnyOrder(studentsExpected.list()));
     }
 }
