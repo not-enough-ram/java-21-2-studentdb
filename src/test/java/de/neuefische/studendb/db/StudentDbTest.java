@@ -9,8 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StudentDbTest {
 
@@ -106,11 +105,11 @@ class StudentDbTest {
 
         // Then
         ArrayList<Student> expected = new ArrayList<>();
-                expected.add(new Student("Jane", "42")),
-                expected.add(new Student("Klaus", "13")),
-                expected.add(new Student("Franky", "100"))
-        };
-        assertArrayEquals(expected, actual);
+                expected.add(new Student("Jane", "42"));
+                expected.add(new Student("Klaus", "13"));
+                expected.add(new Student("Franky", "100"));
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -132,5 +131,118 @@ class StudentDbTest {
                 + "Student{name='Klaus', id='13'}\n"
                 + "Student{name='Franky', id='100'}\n";
         assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestAddArguments")
+    void add(Student[] given, Student[] expectedArray) {
+        // GIVEN
+        Student jane = new Student("Jane", "42");
+        StudentDb expected= new StudentDb(expectedArray);
+        StudentDb actual = new StudentDb(given);
+
+        //WHEN
+        actual.add(jane);
+
+        // THEN
+        assertEquals(expected, actual);
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestRemoveArguments")
+    void remove(Student[] givenArray, Student[] expectedArray) {
+        // GIVEN
+        Student jane = new Student("Jane", "42");
+        StudentDb expected= new StudentDb(expectedArray);
+        StudentDb actual = new StudentDb(givenArray);
+
+        //WHEN
+        actual.remove(jane);
+
+        // THEN
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void findByIdTest() {
+        // GIVEN
+        ArrayList students = new ArrayList();
+        students.add(new Student("Jane", "42"));
+        students.add(new Student("Kai", "13"));
+        students.add(new Student("Kani", "666"));
+
+        StudentDb studentDb = new StudentDb(students);
+
+        Student expected = new Student("Jane", "42");
+        String id = "42";
+
+        // WHEN
+        Student actual = studentDb.findById(id);
+
+        // THEN
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void findByIdNoMatchTest() {
+        // GIVEN
+        ArrayList students = new ArrayList();
+        students.add(new Student("Jane", "42"));
+        students.add(new Student("Kai", "13"));
+        students.add(new Student("Kani", "666"));
+
+        StudentDb studentDb = new StudentDb(students);
+
+        String id = "43";
+
+        // WHEN
+        Student actual = studentDb.findById(id);
+
+        // THEN
+        assertNull(actual);
+
+    }
+
+    @Test
+    void findByIdNoListTest() {
+        // GIVEN
+        ArrayList students = new ArrayList();
+
+        StudentDb studentDb = new StudentDb(students);
+
+        String id = "43";
+
+        // WHEN
+        Student actual = studentDb.findById(id);
+
+        // THEN
+        assertNull(actual);
+
+    }
+
+    @Test
+    void removeById() {
+        // GIVEN
+        ArrayList students = new ArrayList();
+        students.add(new Student("Jane", "42"));
+        students.add(new Student("Kai", "13"));
+        students.add(new Student("Kani", "666"));
+
+        ArrayList studentsExpected = new ArrayList();
+        studentsExpected.add(new Student("Kai", "13"));
+        studentsExpected.add(new Student("Kani", "666"));
+
+        StudentDb studentDbExpected = new StudentDb(studentsExpected);
+        StudentDb studentDb = new StudentDb(students);
+
+        String id = "42";
+
+        // WHEN
+        studentDb.removeById(id);
+
+        // THEN
+        assertEquals(studentsExpected, studentDb.list());
     }
 }

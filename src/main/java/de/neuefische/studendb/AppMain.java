@@ -15,6 +15,8 @@ public class AppMain {
 
         StudentDb studentDb = new StudentDb(students);
 
+        System.out.println(studentDb);
+
         for(int i=0; i < 5; i++){
             System.out.println(studentDb.randomStudent());
         }
