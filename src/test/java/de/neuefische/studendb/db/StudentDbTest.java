@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -92,21 +94,21 @@ class StudentDbTest {
     @DisplayName("list() returns all students in the db")
     public void testList() {
         // Given
-        Student[] students = new Student[]{
-                new Student("Jane", "42"),
-                new Student("Klaus", "13"),
-                new Student("Franky", "100")
-        };
+        ArrayList<Student> students = new ArrayList<>();
+               students.add(new Student("Jane", "42"));
+               students.add(new Student("Klaus", "13"));
+               students.add(new Student("Franky", "100"));
+
         StudentDb studentDb = new StudentDb(students);
 
         // When
-        Student[] actual = studentDb.list();
+        ArrayList<Student> actual = studentDb.list();
 
         // Then
-        Student[] expected = new Student[]{
-                new Student("Jane", "42"),
-                new Student("Klaus", "13"),
-                new Student("Franky", "100")
+        ArrayList<Student> expected = new ArrayList<>();
+                expected.add(new Student("Jane", "42")),
+                expected.add(new Student("Klaus", "13")),
+                expected.add(new Student("Franky", "100"))
         };
         assertArrayEquals(expected, actual);
     }
@@ -115,11 +117,11 @@ class StudentDbTest {
     @DisplayName("toString() returns a formatted list of all students")
     public void testToString() {
         // Given
-        Student[] students = new Student[]{
-                new Student("Jane", "42"),
-                new Student("Klaus", "13"),
-                new Student("Franky", "100")
-        };
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student("Jane", "42"));
+        students.add(new Student("Klaus", "13"));
+        students.add(new Student("Franky", "100"));
+
         StudentDb studentDb = new StudentDb(students);
 
         // When
@@ -130,34 +132,5 @@ class StudentDbTest {
                 + "Student{name='Klaus', id='13'}\n"
                 + "Student{name='Franky', id='100'}\n";
         assertEquals(expected, actual);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideTestAddArguments")
-    public void testAdd(Student[] givenStudents, Student[] expectedStudents) {
-        // Given
-        StudentDb studentDb = new StudentDb(givenStudents);
-        Student student = new Student("Jane", "42");
-
-        // When
-        studentDb.add(student);
-        Student[] actualStudents = studentDb.list();
-
-        // Then
-        assertArrayEquals(expectedStudents, actualStudents);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideTestRemoveArguments")
-    public void testRemove(Student[] givenStudents, Student[] expectedStudents) {
-        // Given
-        StudentDb studentDb = new StudentDb(givenStudents);
-
-        // When
-        studentDb.remove(new Student("Jane", "42"));
-        Student[] actualStudents = studentDb.list();
-
-        // Then
-        assertArrayEquals(expectedStudents, actualStudents);
     }
 }
