@@ -114,7 +114,7 @@ class StudentDbTest {
         expected.add(new Student("Klaus", "13"));
         expected.add(new Student("Franky", "100"));
 
-        assertEquals(expected, actual);
+        assertTrue(expected.list().equals(actual));
     }
 
     @ParameterizedTest
@@ -218,6 +218,4 @@ class StudentDbTest {
         students.removeById(id);
 
         // THEN
-        assertThat(students.list(), containsInAnyOrder(studentsExpected.list()));
-    }
-}
+        assertTrue(students.equals(studentsExpected));
